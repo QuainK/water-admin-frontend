@@ -1,0 +1,94 @@
+* {
+  font-family: "PingFang SC", "Microsoft YaHei UI", 宋体, sans-serif;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a,
+a:link,
+a:visited,
+a:hover,
+a:active,
+a:focus {
+  text-decoration: none;
+}
+
+h1 {
+  font-size: 1.1rem;
+}
+
+h3 {
+  font-size: 0.8rem;
+}
+
+/* Chrome、Safari等关闭数字输入框的上下箭头 */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+/* FireFox关闭数字输入框的上下箭头 */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+#container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 100vh;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: .3rem .5rem;
+  color: #eee;
+  background-color: #345;
+  flex: 0 0 auto;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  min-height: 100%;
+  background-color: #ccc;
+  flex: 1 0 auto;
+}
+
+footer {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 0.5rem 0;
+  color: #eee;
+  background-color: #678;
+  flex: 0 0 auto;
+}
+
+#header-input-box > label {
+  padding: 0 1rem;
+}
+
+#map-container {
+  display: block;
+  width: 100%;
+  flex: 1 0 auto;
+}
+
+main .btn-add {
+  margin: 0.5rem 0;
+}
+
+.btn-group {
+  margin: 0 5rem;
+}
