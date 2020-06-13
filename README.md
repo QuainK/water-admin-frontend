@@ -12,6 +12,10 @@ _更新日志请移步至 [CHANGELOG.md](CHANGELOG.md)_
 
 - @vue/cli 4.4.1
 
+- vue-router 3.3.3
+
+- vuex 3.4.0
+
 - axios 0.19.2
 
 - element-ui 2.13.2
