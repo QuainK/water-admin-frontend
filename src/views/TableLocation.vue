@@ -1,7 +1,8 @@
 <template>
   <main>
     <!--新增按钮-->
-    <el-button @click="showLocationEditor(-1)" class="btn-add" size="mini" type="primary">新增</el-button>
+    <el-button @click="showLocationEditor(-1)" class="btn-add" size="mini" type="primary">新增
+    </el-button>
 
     <!--水表位置表格-->
     <el-table :data="$store.state.location" border stripe>
@@ -11,7 +12,8 @@
       <el-table-column label="纬度" prop="latitude"></el-table-column>
       <el-table-column label="操作" width="280">
         <template slot-scope="scope">
-          <el-button @click="showLocationEditor(scope.$index)" size="mini" type="warning">修改</el-button>
+          <el-button @click="showLocationEditor(scope.$index)" size="mini" type="warning">修改
+          </el-button>
           <el-button @click="deleteLocation(scope.$index)" size="mini" type="danger">删除</el-button>
           <el-button @click="jumpToRecord(scope.$index)" size="mini" type="primary">记录</el-button>
         </template>
@@ -55,7 +57,7 @@
       }
     },
     created() {
-      this.$store.commit("getAllLocation");
+      this.$store.commit("getAllLocationPageable");
     },
     methods: {
       // 显示位置编辑对话框。scopeIndex = -1，是新增；scopeIndex = 自然数，是列表序号对应的水表位置
@@ -78,7 +80,7 @@
         const _ss = this.$store.state;
         axios({
           method: 'post',
-          url: _ss.serverUrl + "/location",
+          url: _ss.serverUrl + "/locations",
           params: {
             name: _ss.locationEditing.name,
             longitude: _ss.locationEditing.longitude,
@@ -86,7 +88,7 @@
           }
         }).then(() => {
           _this.$parent.notifySuccess();
-          _this.$store.commit("getAllLocation");
+          _this.$store.commit("getAllLocationPageable");
           _this.isLocationEditorVisible = false;
         }).catch(() => {
           _this.notifyError();
@@ -99,7 +101,7 @@
         const _ss = this.$store.state;
         axios({
           method: 'put',
-          url: _ss.serverUrl + "/location/" + _ss.locationEditing.waterId,
+          url: _ss.serverUrl + "/locations/" + _ss.locationEditing.waterId,
           params: {
             name: _ss.locationEditing.name,
             longitude: _ss.locationEditing.longitude,
@@ -107,7 +109,7 @@
           }
         }).then(() => {
           _this.$parent.notifySuccess();
-          _this.$store.commit("getAllLocation");
+          _this.$store.commit("getAllLocationPageable");
           _this.isLocationEditorVisible = false;
         }).catch(() => {
           _this.notifyError();
@@ -119,10 +121,10 @@
         const _this = this;
         const _ss = this.$store.state;
         axios
-          .delete(_ss.serverUrl + "/location/" + _ss.location[scopeIndex].waterId)
+          .delete(_ss.serverUrl + "/locations/" + _ss.location[scopeIndex].waterId)
           .then(() => {
             _this.$parent.notifySuccess();
-            _this.$store.commit("getAllLocation");
+            _this.$store.commit("getAllLocationPageable");
           }).catch(() => {
           _this.$parent.notifyError();
         });
@@ -139,8 +141,9 @@
       jumpToRecord(scopeIndex) {
         const _ss = this.$store.state;
         _ss.locationEditing.waterId = _ss.location[scopeIndex].waterId;
+        _ss.recordEditing.waterId = _ss.location[scopeIndex].waterId;
         _ss.locationEditing.name = _ss.location[scopeIndex].name;
-        this.$store.commit("getAllRecordByWaterId");
+        this.$store.commit("getAllRecordByWaterIdPageable");
         this.$parent.activeMenuIndex = '3';
         this.$router.push({path: '/TableRecord'});
       },

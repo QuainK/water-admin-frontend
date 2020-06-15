@@ -89,10 +89,10 @@
         });
 
         _this.markerList = []; // 清空点标记列表
-        for (let i = 0; i < _ss.location.length; i++) {
+        for (let i = 0; i < _ss.locationAll.length; i++) {
           let myMarker = new AMap.Marker({
-            position: [_ss.location[i].longitude, _ss.location[i].latitude], // 水表经纬度位置
-            title: _ss.location[i].name, // 水表名称
+            position: [_ss.locationAll[i].longitude, _ss.locationAll[i].latitude], // 水表经纬度位置
+            title: _ss.locationAll[i].name, // 水表名称
           });
           _this.markerList.push(myMarker); // 点标记对象加入点标记列表
           myMarker.on('click', _this.clickMarker); // 点标记列表添加点击事件监听
@@ -113,22 +113,22 @@
         let clickedLatitude = position.split(",")[1];
 
         // 遍历判断经纬度相等，得出点击的是哪个点标记
-        for (let i in _ss.location) {
-          if (parseFloat(clickedLongitude) === parseFloat(_ss.location[i].longitude)
-            && parseFloat(clickedLatitude) === parseFloat(_ss.location[i].latitude)) {
+        for (let i in _ss.locationAll) {
+          if (parseFloat(clickedLongitude) === parseFloat(_ss.locationAll[i].longitude)
+            && parseFloat(clickedLatitude) === parseFloat(_ss.locationAll[i].latitude)) {
             this.isWaterInfoDrawerVisible = true;
-            _ss.locationEditing.waterId = _ss.location[i].waterId;
+            _ss.locationEditing.waterId = _ss.locationAll[i].waterId;
 
             axios
-              .get(_ss.serverUrl + "/record/" + _ss.locationEditing.waterId)
+              .get(_ss.serverUrl + "/records/" + _ss.locationEditing.waterId)
               .then((response) => {
-                _ss.locationEditing.name = _ss.location[i].name;
-                _ss.locationEditing.longitude = _ss.location[i].longitude;
-                _ss.locationEditing.latitude = _ss.location[i].latitude;
+                _ss.locationEditing.name = _ss.locationAll[i].name;
+                _ss.locationEditing.longitude = _ss.locationAll[i].longitude;
+                _ss.locationEditing.latitude = _ss.locationAll[i].latitude;
                 // 该水表最新一条记录
-                _ss.recordEditing.recordId = response.data[0].recordId;
-                _ss.recordEditing.recordDate = response.data[0].recordDate;
-                _ss.recordEditing.instantUsage = response.data[0].instantUsage;
+                _ss.recordEditing.recordId = response.data.content[0].recordId;
+                _ss.recordEditing.recordDate = response.data.content[0].recordDate;
+                _ss.recordEditing.instantUsage = response.data.content[0].instantUsage;
               }).catch((error) => {
               console.log(error);
             });
@@ -147,16 +147,14 @@
 
       // 时间戳转日期格式
       formatTimestampToDateTime() {
-        console.log("format")
         let date = this.$store.state.recordEditing.recordDate;
-        if (date === undefined) return "N/A";
         return moment(date).format("YYYY-MM-DD HH:mm:ss");
       },
 
       // 跳转至记录页面，查看该水表的全部历史记录
       jumpToRecord() {
         this.isWaterInfoDrawerVisible = false;
-        this.$store.commit("getAllRecordByWaterId");
+        this.$store.commit("getAllRecordByWaterIdPageable");
         this.$parent.activeMenuIndex = '3';
         this.$router.push({path: '/TableRecord'})
       }

@@ -4,7 +4,8 @@
     <h2>水表记录 - {{$store.state.locationEditing.name}}</h2>
 
     <!--新增按钮-->
-    <el-button @click="showRecordEditor(-1)" class="btn-add" size="mini" type="primary">新增</el-button>
+    <el-button @click="showRecordEditor(-1)" class="btn-add" size="mini" type="primary">新增
+    </el-button>
 
     <!--水表记录表格-->
     <el-table :data="$store.state.record" border stripe>
@@ -14,7 +15,8 @@
       <el-table-column label="瞬时用量" prop="instantUsage"></el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button @click="showRecordEditor(scope.$index)" size="mini" type="warning">修改</el-button>
+          <el-button @click="showRecordEditor(scope.$index)" size="mini" type="warning">修改
+          </el-button>
           <el-button @click="deleteRecord(scope.$index)" size="mini" type="danger">删除</el-button>
         </template>
       </el-table-column>
@@ -75,18 +77,17 @@
       addRecord() {
         const _this = this;
         const _ss = this.$store.state;
-        let formattedRecordDate = moment(_ss.recordEditing.recordDate).format("YYYY-MM-DD HH:mm:ss");
         axios({
           method: 'post',
-          url: _ss.serverUrl + "/record",
+          url: _ss.serverUrl + "/records",
           params: {
             waterId: _ss.recordEditing.waterId,
-            recordDate: formattedRecordDate,
+            recordDate: _ss.recordEditing.recordDate,
             instantUsage: _ss.recordEditing.instantUsage,
           }
         }).then(() => {
           _this.$parent.notifySuccess();
-          _this.$store.commit("getAllRecordByWaterId");
+          _this.$store.commit("getAllRecordByWaterIdPageable");
           _this.isRecordEditorVisible = false;
         }).catch(() => {
           _this.$parent.notifyError();
@@ -97,19 +98,18 @@
       updateRecord() {
         const _this = this;
         const _ss = this.$store.state;
-        let formattedRecordDate = moment(_ss.recordEditing.recordDate).format("YYYY-MM-DD HH:mm:ss");
         axios({
           method: 'put',
-          url: _ss.serverUrl + "/record/" + _ss.recordEditing.recordId,
+          url: _ss.serverUrl + "/records/" + _ss.recordEditing.recordId,
           params: {
             recordId: _ss.recordEditing.recordId,
             waterId: _ss.recordEditing.waterId,
-            recordDate: formattedRecordDate,
+            recordDate: _ss.recordEditing.recordDate,
             instantUsage: _ss.recordEditing.instantUsage,
           }
         }).then(() => {
           _this.$parent.notifySuccess();
-          _this.$store.commit("getAllRecordByWaterId");
+          _this.$store.commit("getAllRecordByWaterIdPageable");
           _this.isRecordEditorVisible = false;
         }).catch(() => {
           _this.$parent.notifyError();
@@ -121,27 +121,28 @@
         const _this = this;
         const _ss = this.$store.state;
         axios
-          .delete(_ss.serverUrl + "/record/" + _ss.record[scopeIndex].recordId)
+          .delete(_ss.serverUrl + "/records/" + _ss.record[scopeIndex].recordId)
           .then(() => {
             _this.$parent.notifySuccess();
-            _this.$store.commit("getAllRecordByWaterId");
+            _this.$store.commit("getAllRecordByWaterIdPageable");
           }).catch(() => {
           _this.$parent.notifyError();
         });
       },
 
-      // 时间戳转日期格式
-      formatTimestampToDateTime(row, column) {
-        let date = row[column.property];
-        if (date === undefined) return "N/A";
-        return moment(date).format("YYYY-MM-DD HH:mm:ss");
-      },
-
       // 提交添加或更新的记录
       submitRecord() {
+        const _ss = this.$store.state;
+        _ss.recordEditing.recordDate = moment(_ss.recordEditing.recordDate).valueOf();
         if (this.isEditingNewRecord) this.addRecord();
         else this.updateRecord();
         this.isRecordEditorVisible = false;
+      },
+
+      // 时间戳转日期格式
+      formatTimestampToDateTime(row, column) {
+        let date = row[column.property];
+        return moment(date).format("YYYY-MM-DD HH:mm:ss");
       },
     },
   }
