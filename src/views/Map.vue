@@ -20,38 +20,40 @@
       :withHeader="false"
       direction="rtl"
       size="40%">
-      <el-form label-position="right" label-width="150px">
-        <el-form-item class="water-info-item" label="水表编号">
-          <el-input v-model="$store.state.locationEditing.waterId"></el-input>
-        </el-form-item>
-        <el-form-item class="water-info-item" label="水表名称">
-          <el-input v-model="$store.state.locationEditing.name"></el-input>
-        </el-form-item>
-        <el-form-item class="water-info-item" label="位置经度">
-          <el-input v-model="$store.state.locationEditing.longitude"></el-input>
-        </el-form-item>
-        <el-form-item class="water-info-item" label="位置纬度">
-          <el-input v-model="$store.state.locationEditing.latitude"></el-input>
-        </el-form-item>
-        <el-form-item class="water-info-item" label="最新记录编号">
-          <el-input v-model="$store.state.recordEditing.recordId"></el-input>
-        </el-form-item>
-        <el-form-item class="water-info-item" label="最新记录日期时间">
-          <el-date-picker
-            placeholder="选择日期时间"
-            type="datetime"
-            v-model="$store.state.recordEditing.recordDate">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item class="water-info-item" label="最新记录瞬时用量">
-          <el-input v-model="$store.state.recordEditing.instantUsage"></el-input>
-        </el-form-item>
 
-        <el-form-item class="water-info-item">
-          <el-button @click="jumpToRecord" type="info">查看全部记录</el-button>
-          <el-button @click="isWaterInfoDrawerVisible = false" type="primary">关闭水表信息</el-button>
-        </el-form-item>
-      </el-form>
+      <table class="water-info-table">
+        <tr>
+          <td>水表编号</td>
+          <td>{{$store.state.locationEditing.waterId}}</td>
+        </tr>
+        <tr>
+          <td>水表名称</td>
+          <td>{{$store.state.locationEditing.name}}</td>
+        </tr>
+        <tr>
+          <td>位置经度</td>
+          <td>{{$store.state.locationEditing.longitude}}</td>
+        </tr>
+        <tr>
+          <td>位置纬度</td>
+          <td>{{$store.state.locationEditing.latitude}}</td>
+        </tr>
+        <tr>
+          <td>最新记录编号</td>
+          <td>{{$store.state.recordEditing.recordId}}</td>
+        </tr>
+        <tr>
+          <td>最新记录时间</td>
+          <td>{{formattedRecordDate}}</td>
+        </tr>
+        <tr>
+          <td>最新记录用量</td>
+          <td>{{$store.state.recordEditing.instantUsage}}</td>
+        </tr>
+      </table>
+
+      <el-button @click="jumpToRecord" type="info">查看全部记录</el-button>
+      <el-button @click="isWaterInfoDrawerVisible = false" type="primary">关闭水表信息</el-button>
     </el-drawer>
   </main>
 </template>
@@ -102,6 +104,13 @@
       }).catch((error) => {
         console.log(error);
       });
+    },
+    computed: {
+      // formattedRecordDate: '2020-05-01 00:00:00', // 格式化显示日期时间
+      formattedRecordDate() {
+        // 时间戳转日期格式
+        return this.formatTimestampToDateTime();
+      }
     },
     methods: {
       // 点击点标记
