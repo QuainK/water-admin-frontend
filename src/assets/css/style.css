@@ -1,11 +1,20 @@
+/* 所有 */
 * {
   font-family: "PingFang SC", "Microsoft YaHei UI", 宋体, sans-serif;
   font-weight: normal;
   margin: 0;
   padding: 0;
+  /* 采用边框盒模型而不是内容盒模型，解决内外边距影响页面宽度的问题 */
   box-sizing: border-box;
 }
 
+/* HTML页面 */
+body {
+  /* 最小宽度700像素，保证页面宽度缩小时表格不会过度变形 */
+  min-width: 700px;
+}
+
+/* 超链接及其各种状态 */
 a,
 a:link,
 a:visited,
@@ -15,30 +24,34 @@ a:focus {
   text-decoration: none;
 }
 
+/* 1级标题 */
 h1 {
   font-size: 1.2rem;
 }
 
+/* 2级标题 */
 h2 {
   font-size: 1.1rem;
   padding: .5rem 0;
 }
 
+/* 3级标题 */
 h3 {
   font-size: 0.9rem;
 }
 
-/* Chrome、Safari等关闭数字输入框的上下箭头 */
+/* Chrome、Safari等不显示数字输入框的上下箭头 */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-/* FireFox关闭数字输入框的上下箭头 */
+/* FireFox不显示数字输入框的上下箭头 */
 input[type="number"] {
   -moz-appearance: textfield;
 }
 
+/* 页面容器，仅次于body标签的根节点 */
 #container {
   display: flex;
   flex-direction: column;
@@ -47,6 +60,7 @@ input[type="number"] {
   min-height: 100vh;
 }
 
+/* 顶部 */
 header {
   display: flex;
   justify-content: space-between;
@@ -58,10 +72,12 @@ header {
   flex: 0 0 auto;
 }
 
+/* 顶部导航栏 */
 #header-nav-menu {
   display: flex;
 }
 
+/* 子节点从顶部依次往下分布的页面主体 */
 main {
   display: flex;
   flex-direction: column;
@@ -74,10 +90,18 @@ main {
   flex: 1 0 auto;
 }
 
+/* 子节点全部垂直居中的页面主体 */
 .main-center {
   justify-content: center;
 }
 
+/* 主体中的标题部分 */
+.title {
+  font-size: 1.2rem;
+  margin: .5rem 0;
+}
+
+/* 页面底部 */
 footer {
   display: block;
   width: 100%;
@@ -88,39 +112,56 @@ footer {
   flex: 0 0 auto;
 }
 
+/* 文本框盒子，点击的经纬度 */
 #clicked-location-box {
   padding: .3rem 0;
 }
 
+/* 文本框盒子中标签，点击的经纬度 */
 #clicked-location-box > label {
   padding: 0 1rem;
 }
 
+/* 地图容器 */
 #map-container {
   display: block;
   width: 100%;
   flex: 1 0 auto;
 }
 
-main .btn-add {
-  align-self: flex-end;
-  margin: 0.5rem;
-}
-
+/* 表格操作按钮组，在每行数据的最后的那些按钮 */
 .btn-group {
   margin: 0 5rem;
 }
 
-.title {
-  font-size: 1.1rem;
-  margin: .5rem 0;
-}
-
+/* 地图点标记信息抽屉各项 */
 .water-info-item {
-  padding: 1rem 1rem 0 1rem;
+  padding: 1rem;
 }
 
+/* 地图点标记信息抽屉各项中的文本框 */
 .water-info-item input {
   text-align: center;
   width: 220px;
+}
+
+/* 水表位置表格 */
+#table-location {
+  width: 1000px;
+}
+
+/* 水表记录表格 */
+#table-record {
+  width: 600px;
+}
+
+/* 表格中的各项 */
+#table-location *,
+#table-record * {
+  text-align: center;
+}
+
+/* 表格的分页组件 */
+#table-pagination {
+  margin: .5rem 0;
 }

@@ -1,19 +1,20 @@
 <template>
   <main>
-    <!--水表名称标题-->
-    <h2>水表记录 - {{$store.state.locationEditing.name}}</h2>
+    <div class="title">
+      <!--水表名称标题-->
+      <h2>水表记录 - {{$store.state.locationEditing.name}}</h2>
 
-    <!--新增按钮-->
-    <el-button @click="showRecordEditor(-1)" class="btn-add" size="mini" type="primary">新增
-    </el-button>
+      <!--新增按钮-->
+      <el-button @click="showRecordEditor(-1)" size="mini" type="primary">新增</el-button>
+    </div>
 
     <!--水表记录表格-->
-    <el-table :data="$store.state.record" border stripe>
+    <el-table :data="$store.state.record" border id="table-record" stripe>
       <el-table-column label="序号" type="index" width="100"></el-table-column>
       <el-table-column :formatter="formatTimestampToDateTime" label="日期时间"
-                       prop="recordDate" width="300"></el-table-column>
+                       prop="recordDate" width="200"></el-table-column>
       <el-table-column label="瞬时用量" prop="instantUsage"></el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button @click="showRecordEditor(scope.$index)" size="mini" type="warning">修改
           </el-button>
@@ -21,6 +22,19 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <!--分页组件-->
+    <div class="block" id="table-pagination">
+      <el-pagination
+        :current-page="$store.state.recordPageIndex"
+        :page-size="$store.state.recordPageSize"
+        :page-sizes="[5, 10, 20]"
+        :total="$store.state.recordTotalCount"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+        layout="total, sizes, prev, pager, next, jumper">
+      </el-pagination>
+    </div>
 
     <!--水表记录编辑对话框-->
     <el-dialog :visible.sync="isRecordEditorVisible" center title="水表记录">
@@ -143,6 +157,18 @@
       formatTimestampToDateTime(row, column) {
         let date = row[column.property];
         return moment(date).format("YYYY-MM-DD HH:mm:ss");
+      },
+
+      // 改变分页大小
+      handleSizeChange(val) {
+        this.$store.state.recordPageSize = val;
+        this.$store.commit("getAllRecordByWaterIdPageable");
+      },
+
+      // 切换分页页码
+      handleCurrentChange(val) {
+        this.$store.state.recordPageIndex = val;
+        this.$store.commit("getAllRecordByWaterIdPageable");
       },
     },
   }

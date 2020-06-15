@@ -9,7 +9,7 @@ export default new Vuex.Store({
     author: 'QuainK', // 作者
     appVersion: '0.3.0', // 版本号
     serverUrl: 'http://localhost:8082', // 后端服务器地址
-    mapApiKey: "9cdc20978e6f1ea052bcc7510c3d3237", // 申请好的高德地图API的Web端开发者Key，首次调用load时必填
+    mapApiKey: "9cdc20978e6f1ea052bcc7510c3d3237", // 申请好的高德地图API的Web端开发者Key
 
     locationAll: [], // 所有水表位置，地图点标记专用
     /*
@@ -22,6 +22,7 @@ export default new Vuex.Store({
     location: [],
     locationPageIndex: 1, // 当前页码
     locationPageSize: 10, // 每页大小
+    locationTotalCount: 0, // 项目总数
     /*
      * 水表记录
      * recordId 记录编号 int
@@ -32,6 +33,7 @@ export default new Vuex.Store({
     record: [],
     recordPageIndex: 1, // 当前页码
     recordPageSize: 10, // 每页大小
+    recordTotalCount: 0, // 项目总数
 
     // 当前正在编辑的水表位置
     locationEditing: {
@@ -74,8 +76,9 @@ export default new Vuex.Store({
           pageSize: state.locationPageSize,
         }
       }).then((response) => {
+        state.locationTotalCount = response.data.totalElements; // 获取总数
         for (let i in response.data.content) {
-          state.location.push(response.data.content[i]);
+          state.location.push(response.data.content[i]); // 遍历存入
         }
       }).catch(() => {
       });
@@ -106,8 +109,9 @@ export default new Vuex.Store({
           pageSize: state.recordPageSize,
         }
       }).then((response) => {
+        state.recordTotalCount = response.data.totalElements; // 获取总数
         for (let i in response.data.content) {
-          state.record.push(response.data.content[i]);
+          state.record.push(response.data.content[i]); // 遍历存入
         }
       }).catch(() => {
       });

@@ -1,16 +1,20 @@
 <template>
   <main>
-    <!--新增按钮-->
-    <el-button @click="showLocationEditor(-1)" class="btn-add" size="mini" type="primary">新增
-    </el-button>
+    <div class="title">
+      <!--标题-->
+      <h2>水表位置</h2>
+
+      <!--新增按钮-->
+      <el-button @click="showLocationEditor(-1)" size="mini" type="primary">新增</el-button>
+    </div>
 
     <!--水表位置表格-->
-    <el-table :data="$store.state.location" border stripe>
+    <el-table :data="$store.state.location" border id="table-location" stripe>
       <el-table-column label="序号" type="index" width="100"></el-table-column>
-      <el-table-column label="名称" prop="name" width="300"></el-table-column>
-      <el-table-column label="经度" prop="longitude"></el-table-column>
-      <el-table-column label="纬度" prop="latitude"></el-table-column>
-      <el-table-column label="操作" width="280">
+      <el-table-column label="名称" prop="name"></el-table-column>
+      <el-table-column label="经度" prop="longitude" width="100"></el-table-column>
+      <el-table-column label="纬度" prop="latitude" width="100"></el-table-column>
+      <el-table-column label="操作" width="300">
         <template slot-scope="scope">
           <el-button @click="showLocationEditor(scope.$index)" size="mini" type="warning">修改
           </el-button>
@@ -19,6 +23,19 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <!--分页组件-->
+    <div class="block">
+      <el-pagination
+        :current-page="$store.state.locationPageIndex"
+        :page-size="$store.state.locationPageSize"
+        :page-sizes="[5, 10, 20]"
+        :total="$store.state.locationTotalCount"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+        layout="total, sizes, prev, pager, next, jumper">
+      </el-pagination>
+    </div>
 
     <!--水表位置编辑对话框-->
     <el-dialog :visible.sync="isLocationEditorVisible" center title="水表位置">
@@ -37,7 +54,7 @@
       <!--按钮组-->
       <div class="dialog-footer" slot="footer">
         <el-button @click="selectLocationOnMap" type="info">从地图中选取经纬度</el-button>
-        <el-button @click="this.$store.state.locationEditing = {}" type="warning">清空</el-button>
+        <el-button @click="$store.state.locationEditing = {}" type="warning">清空</el-button>
         <el-button @click="isLocationEditorVisible = false" type="danger">取消</el-button>
         <el-button @click="submitLocation" type="primary">确定</el-button>
       </div>
@@ -153,7 +170,19 @@
         this.isLocationEditorVisible = false;
         this.$parent.activeMenuIndex = '1';
         this.$router.push({path: '/Map'});
-      }
+      },
+
+      // 改变分页大小
+      handleSizeChange(val) {
+        this.$store.state.locationPageSize = val;
+        this.$store.commit("getAllLocationPageable");
+      },
+
+      // 切换分页页码
+      handleCurrentChange(val) {
+        this.$store.state.locationPageIndex = val;
+        this.$store.commit("getAllLocationPageable");
+      },
     },
   }
 </script>
